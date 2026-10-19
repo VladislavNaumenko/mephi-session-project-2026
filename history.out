@@ -1,0 +1,101 @@
+ip addr
+nmcli dev modify enp0s3 ipv4.method auto
+nmcli connection up enp0s3
+ip addr show enp0s3
+hostnamectl set-hostname mephi-2026.domain.local
+hostname -f
+ping -c 4 8.8.8.8 > ping.out
+cat ping.out
+dnf update -y
+dnf install -y nginx libcap-ng-utils
+rpm -q nginx libcap-ng-utils
+systemctl status nginx
+ls -l /etc/nginx/
+dnf download tcpdump --destdir=/tmp
+cd /tmp
+ls -1 *.rpm | grep tcpdump
+rpm -ivh tcpdump-4.99.5-1.red80.x86_64.rpm
+dnf history > dnf.out
+systemctl start nginx
+systemctl status nginx
+systemctl enable nginx
+systemctl is-enabled nginx
+journalctl -u nginx --boot > journalctl.out
+head -n 20 journalctl.out
+wc -l journalctl.out
+lsblk
+blkid -o value -s LABEL /dev/sdb1
+grep "/mephi-web" /etc/fstab
+df -h /mephi-web
+mkdir -p /data/mephi-2026
+useradd -u 5501 -m user1
+useradd -u 5502 -m user2
+useradd -u 5503 -m user3
+groupadd -g 4444 curators
+useradd -m curator1
+useradd -m curator2
+usermod -aG curators curator1
+usermod -aG curators curator2
+groupadd devs
+usermod -aG devs user1
+usermod -aG devs user2
+usermod -aG devs user3
+chgrp devs /data/mephi-2026
+chmod 2770 /data/mephi-2026
+setfacl -R -m g:curators:r-X /data/mephi-2026
+getfacl /data/mephi-2026
+ls -ld /data/mephi-2026
+echo 'user1 ALL=(ALL) NOPASSWD: /usr/sbin/tcpdump' > /etc/sudoers.d/tcpdump
+chmod 440 /etc/sudoers.d/tcpdump
+visudo -c
+sudo user1 tcpdump --version
+sudo -u user1 tcpdump --version
+ls -l /usr/sbin/tcpdump
+sudo chmod u+s /usr/sbin/tcpdump
+ls -l /usr/sbin/tcpdump
+sudo -u user1 tcpdump -h
+getenforce
+cat /etc/security/access.conf | grep -v "^#" | grep -v "^$"
+grep pam_access /etc/pam.d/login
+getent passwd curator1
+sudo -u curator1 login
+echo "Code $?"
+grep minlen /etc/security/pwquality.conf
+chage -l user1
+chage -l curator1
+dnf update -y
+dnf install -y nginx libcap-ng-utils
+rpm -q nginx libcap-ng-utils
+systemctl status nginx
+ls -l /etc/nginx/
+dnf download tcpdump --destdir=/tmp
+cd /tmp
+ls -1 *.rpm | grep tcpdump
+rpm -ivh tcpdump-4.99.5-1.red80.x86_64.rpm
+dnf history > dnf.out
+systemctl start nginx
+systemctl status nginx
+systemctl enable nginx
+systemctl is-enabled nginx
+journalctl -u nginx --boot > journalctl.out
+head -n 20 journalctl.out
+wc -l journalctl.out
+mkdir -p /data/mephi-2026
+useradd -u 5501 -m user1
+useradd -u 5502 -m user2
+useradd -u 5503 -m user3
+groupadd -g 4444 curators
+useradd -m curator1
+useradd -m curator2
+usermod -aG curators curator1
+usermod -aG curators curator2
+groupadd devs
+usermod -aG devs user1
+usermod -aG devs user2
+usermod -aG devs user3
+chgrp devs /data/mephi-2026
+chmod 2770 /data/mephi-2026
+setfacl -R -m g:curators:r-X /data/mephi-2026
+getfacl /data/mephi-2026
+getcap /usr/sbin/tcpdump > ~/getcap.out
+curl http://127.0.0.1/ > curl.out

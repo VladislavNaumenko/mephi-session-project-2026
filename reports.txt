@@ -1,0 +1,111 @@
+========================================
+ОТЧЁТ ПО ЛАБОРАТОРНОЙ РАБОТЕ
+========================================
+
+[РАЗДЕЛ 1] Установка дистрибутива и сеть
+----------------------------------------
+-- Имя хоста (должно быть mephi-2026.domain.local):
+Static hostname: mephi-2026.domain.local
+
+-- Настройка сети (DHCP):
+DEVICE  TYPE      STATE                 CONNECTION
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host noprefixroute
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+    inet6 fe80::a00:27ff:fe0c:2a0f/64 scope link noprefixroute
+
+-- Проверка связности (ping 8.8.8.8):
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=109 time=18.3 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=109 time=17.9 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=109 time=17.8 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=109 time=18.1 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 17.828/18.059/18.346/0.194 ms
+
+
+[РАЗДЕЛ 2] Управление программным обеспечением
+---------------------------------------------
+-- Статус обновления (история dnf):
+     5 | install -y nginx libcap-ng-utils                        | 2026-10-15 15:16 | Install        |    5
+     4 | update -y                                               | 2026-10-15 14:54 | I, O, U        |  302 E<
+     3 | autoremove -y --setopt=metadata_expire=-1               | 2026-10-14 20:05 | Removed        |    1 ><
+     2 | remove -y --setopt=metadata_expire=-1 open-vm-tools spi | 2026-10-14 20:03 | Removed        |    2 >E
+     1 |                                                         | 2026-10-14 19:40 | Install        | 1761 EE
+
+-- Установленные пакеты (nginx, libcap-ng-utils, tcpdump):
+libcap-2.48-6.red80.x86_64
+libcap-ng-0.8.3-3.red80.x86_64
+libcap-ng-utils-0.8.3-3.red80.x86_64
+nginx-1.30.4-2.red80.x86_64
+nginx-core-1.30.4-2.red80.x86_64
+nginx-filesystem-1.30.4-2.red80.noarch
+nginx-mimetypes-2.1.53-3.red80.noarch
+tcpdump-4.99.5-1.red80.x86_64
+
+-- История транзакций dnf (сохранена в dnf.out):
+Иденти | Командная строка                                        | Дата и время     | Действия       | Изменен
+--------------------------------------------------------------------------------------------------------------
+     5 | install -y nginx libcap-ng-utils                        | 2026-10-15 15:16 | Install        |    5
+     4 | update -y                                               | 2026-10-15 14:54 | I, O, U        |  302 E<
+     3 | autoremove -y --setopt=metadata_expire=-1               | 2026-10-14 20:05 | Removed        |    1 ><
+     2 | remove -y --setopt=metadata_expire=-1 open-vm-tools spi | 2026-10-14 20:03 | Removed        |    2 >E
+     1 |                                                         | 2026-10-14 19:40 | Install        | 1761 EE
+
+
+[РАЗДЕЛ 3] Управление файловыми системами
+-----------------------------------------
+-- Точка монтирования /mephi-web:
+drwxr-xr-x. 2 root root 4096 окт 15 16:14 /mephi-web/
+
+-- Метка тома (должна быть MEPHI_WEB):
+(значение не выведено)
+
+-- Автоматическое монтирование (fstab):
+(данные отсутствуют)
+
+-- Текущее состояние монтирования:
+Файловая система Размер Использовано  Дост Использовано% Cмонтировано в
+/dev/sda4           35G          11G   23G           33% /
+
+
+[РАЗДЕЛ 4] Управление сервисами
+------------------------------
+-- Статус nginx (должен быть active):
+● nginx.service - The nginx HTTP and reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: disabled)
+    Drop-In: /usr/lib/systemd/system/service.d
+             └─10-timeout-abort.conf
+     Active: active (running) since Thu 2026-10-15 16:23:12 MSK; 2h 41min ago
+    Process: 72928 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
+    Process: 72929 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+    Process: 72930 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)
+    Process: 73385 ExecReload=/usr/sbin/nginx -s reload (code=exited, status=0/SUCCESS)
+   Main PID: 72931 (nginx)
+
+-- Автоматический запуск при загрузке (должен быть enabled):
+enabled
+
+-- Журналирование (сообщения nginx для текущей загрузки, сохранено в journalctl.out):
+окт 15 15:35:01 mephi-2026.domain.local systemd[1]: Starting nginx.service - The nginx HTTP and reverse proxy server...
+окт 15 15:35:01 mephi-2026.domain.local nginx[72470]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+окт 15 15:35:01 mephi-2026.domain.local nginx[72470]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+окт 15 15:35:01 mephi-2026.domain.local systemd[1]: Started nginx.service - The nginx HTTP and reverse proxy server.
+окт 15 16:12:01 mephi-2026.domain.local systemd[1]: Stopping nginx.service - The nginx HTTP and reverse proxy server...
+окт 15 16:12:01 mephi-2026.domain.local systemd[1]: nginx.service: Deactivated successfully.
+окт 15 16:12:01 mephi-2026.domain.local systemd[1]: Stopped nginx.service - The nginx HTTP and reverse proxy server.
+окт 15 16:12:01 mephi-2026.domain.local systemd[1]: Starting nginx.service - The nginx HTTP and reverse proxy server...
+окт 15 16:12:01 mephi-2026.domain.local nginx[72794]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+окт 15 16:12:01 mephi-2026.domain.local nginx[72794]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+окт 15 16:12:01 mephi-2026.domain.local systemd[1]: Started nginx.service - The nginx HTTP and reverse proxy server.
+окт 15 16:16:46 mephi-2026.domain.local systemd[1]: Stopping nginx.service - The nginx HTTP and reverse proxy server...
+окт 15 16:16:46 mephi-2026.domain.local systemd[1]: nginx.service: Deactivated successfully.
+окт 15 16:16:46 mephi-2026.domain.local systemd[1]: Stopped nginx.service - The nginx HTTP and reverse proxy server.
+окт 15 16:16:46 mephi-2026.domain.local systemd[1]: Starting nginx.service - The nginx HTTP and reverse proxy server...
+окт 15 16:16:46 mephi-2026.domain.local nginx[72812]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+окт 15 16:16:46 mephi-2026.domain.local nginx[72812]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+окт 15 16:16:46 mephi-2026.domain.local systemd[1]: Started nginx.service - The nginx HTTP and reverse proxy server.
+окт 15 16:22:59 mephi-2026.domain.local systemd[1]: Stopping nginx.service - The nginx HTTP and reverse proxy server...
+окт 15 16:23:00 mephi-2026.domain.local systemd[1]: nginx.service: Deactivated successfully.
